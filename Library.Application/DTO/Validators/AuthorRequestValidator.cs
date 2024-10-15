@@ -15,7 +15,7 @@ namespace Library.Application.DTO.Validators
             RuleFor(r => r.LastName)
                 .NotEmpty().WithMessage("Author's lastname is required")
                 .Length(2, 50).WithMessage("Author's lastname must be between 2 and 50 characters long.")
-                .Matches(@"^[A-Za-z]*$").WithMessage("Author's lastname must contain only letters");
+                .Matches(@"^[A-Za-zА-Яа-я]*$").WithMessage("Author's lastname must contain only letters");
 
             RuleFor(r => r.Country)
                 .NotEmpty().WithMessage("Author's country is required")
@@ -25,7 +25,17 @@ namespace Library.Application.DTO.Validators
             RuleFor(r => r.DateOfBirth)
                 .NotEmpty().WithMessage("Author's date of birth is required.")
                 .LessThan(DateTime.Now).WithMessage("Author's date of birth cannot be in the future.");
+        }
+    }
 
+    public class AuthorUpdateRequestValidator : AbstractValidator<AuthorUpdateRequest>
+    {
+        public AuthorUpdateRequestValidator()
+        {
+            Include(new AuthorRequestValidator());
+
+            RuleFor(r => r.Id)
+                .NotEmpty().WithMessage("Author's ID is required");
         }
     }
 }

@@ -30,7 +30,17 @@ namespace Library.Application.DTO.Validators
 
             RuleFor(r => r.AuthorId)
                 .NotEmpty().WithMessage("Author is required");
+        }
+    }
 
+    public class BookUpdateRequestValidator : AbstractValidator<BookUpdateRequest>
+    {
+        public BookUpdateRequestValidator()
+        {
+            Include(new BookRequestValidator());
+
+            RuleFor(r => r.Id)
+                .NotEmpty().WithMessage("Book ID is required");
         }
     }
 }
