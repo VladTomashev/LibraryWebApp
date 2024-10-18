@@ -5,6 +5,7 @@ using Library.Application.Interfaces.Services;
 using Library.Application.Interfaces;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
+using Library.Application.Exceptions;
 
 namespace Library.Application.UseCases
 {
@@ -27,6 +28,13 @@ namespace Library.Application.UseCases
         public async void Execute(BookRentalRequest request, CancellationToken cancellationToken = default)
         {
             await validationService.ValidateAsync(validator, request, cancellationToken);
+            
+            IEnumerable<BookRental> rentals = await unitOfWork.BookRentalRepository.GetAllAsync(cancellationToken);
+            if (rentals.Any(r => r.BookId == request.BookId && r.IsReturned == false))
+            {
+                throw new BadRequestException("Book unavailable");
+            }
+
             BookRental bookRental = mapper.Map<BookRental>(request);
             bookRental.Id = Guid.NewGuid();
             await unitOfWork.BookRentalRepository.AddAsync(bookRental, cancellationToken);
