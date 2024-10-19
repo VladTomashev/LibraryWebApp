@@ -28,9 +28,20 @@ namespace Library.Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<T>> GetAllAsync(PaginationParams? paginationParams, 
+            CancellationToken cancellationToken = default)
         {
-            return await db.Set<T>().AsNoTracking().ToListAsync(cancellationToken);
+            if (paginationParams == null)
+            {
+                return await db.Set<T>().AsNoTracking().ToListAsync(cancellationToken);
+            }
+            else
+            {
+                return await db.Set<T>().AsNoTracking()
+                    .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                    .Take(paginationParams.PageSize)
+                    .ToListAsync(cancellationToken);
+            }
         }
 
         public async Task<T> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

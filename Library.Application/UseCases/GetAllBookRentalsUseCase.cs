@@ -18,9 +18,10 @@ namespace Library.Application.UseCases
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<BookRentalResponse>> Execute(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<BookRentalResponse>> Execute(PaginationParams paginationParams, 
+            CancellationToken cancellationToken = default)
         {
-            IEnumerable<BookRental>? bookRentals = await unitOfWork.BookRentalRepository.GetAllAsync(cancellationToken);
+            IEnumerable<BookRental>? bookRentals = await unitOfWork.BookRentalRepository.GetAllAsync(paginationParams, cancellationToken);
             if (!bookRentals.Any())
             {
                 throw new NotFoundException("Book rentals not found");

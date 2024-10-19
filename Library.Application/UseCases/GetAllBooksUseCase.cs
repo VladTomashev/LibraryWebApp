@@ -18,9 +18,10 @@ namespace Library.Application.UseCases
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<BookResponse>> Execute(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<BookResponse>> Execute(PaginationParams paginationParams, 
+            CancellationToken cancellationToken = default)
         {
-            IEnumerable<Book>? books = await unitOfWork.BookRepository.GetAllAsync(cancellationToken);
+            IEnumerable<Book>? books = await unitOfWork.BookRepository.GetAllAsync(paginationParams, cancellationToken);
             if (!books.Any())
             {
                 throw new NotFoundException("Books not found");

@@ -1,6 +1,7 @@
 ﻿using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Application.Interfaces.UseCases;
+using Library.Core.Entities;
 using Library.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,9 +35,11 @@ namespace Library.WebApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> GetAllBookRentals(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllBookRentals([FromQuery] PaginationParams paginationParams,
+            CancellationToken cancellationToken)
         {
-            IEnumerable<BookRentalResponse> response = await getAllBookRentalsUseCase.Execute(cancellationToken);
+            IEnumerable<BookRentalResponse> response = await getAllBookRentalsUseCase
+                .Execute(paginationParams, cancellationToken);
             return Ok(response);
         }
 

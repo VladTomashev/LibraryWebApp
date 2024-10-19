@@ -1,6 +1,7 @@
 ﻿using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Application.Interfaces.UseCases;
+using Library.Core.Entities;
 using Library.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,23 +56,29 @@ namespace Library.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllBooks(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllBooks([FromQuery] PaginationParams paginationParams, 
+            CancellationToken cancellationToken)
         {
-            IEnumerable<BookResponse> response = await getAllBooksUseCase.Execute(cancellationToken);
+            IEnumerable<BookResponse> response = await getAllBooksUseCase
+                .Execute(paginationParams, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet("available")]
-        public async Task<IActionResult> GetAvailableBooks(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAvailableBooks([FromQuery] PaginationParams paginationParams, 
+            CancellationToken cancellationToken)
         {
-            IEnumerable<BookResponse> response = await getAvailableBooksUseCase.Execute(cancellationToken);
+            IEnumerable<BookResponse> response = await getAvailableBooksUseCase
+                .Execute(paginationParams, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet("unavailable")]
-        public async Task<IActionResult> GetUnavailableBooks(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetUnavailableBooks([FromQuery] PaginationParams paginationParams, 
+            CancellationToken cancellationToken)
         {
-            IEnumerable<BookResponse> response = await getUnavailableBooksUseCase.Execute(cancellationToken);
+            IEnumerable<BookResponse> response = await getUnavailableBooksUseCase
+                .Execute(paginationParams, cancellationToken);
             return Ok(response);
         }
 
@@ -90,9 +97,11 @@ namespace Library.WebApi.Controllers
         }
 
         [HttpGet("author/{id}")]
-        public async Task<IActionResult> GetBooksByAuthorId(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetBooksByAuthorId(Guid id, [FromQuery] PaginationParams paginationParams,
+            CancellationToken cancellationToken)
         {
-            IEnumerable<BookResponse> response = await getBooksByAuthorIdUseCase.Execute(id, cancellationToken);
+            IEnumerable<BookResponse> response = await getBooksByAuthorIdUseCase
+                .Execute(id, paginationParams, cancellationToken);
             return Ok(response);
         }
 
