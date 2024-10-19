@@ -24,7 +24,7 @@ namespace Library.Application.UseCases
             this.validationService = validationService;
         }
 
-        public async void Execute(BookRequest request, CancellationToken cancellationToken = default)
+        public async Task Execute(BookRequest request, CancellationToken cancellationToken = default)
         {
             await validationService.ValidateAsync(validator, request, cancellationToken);
             Book book = mapper.Map<Book>(request);

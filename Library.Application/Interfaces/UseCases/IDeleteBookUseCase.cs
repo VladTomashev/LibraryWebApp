@@ -2,6 +2,6 @@
 {
     public interface IDeleteBookUseCase
     {
-        public void Execute(Guid id, CancellationToken cancellationToken = default);
+        public Task Execute(Guid id, CancellationToken cancellationToken = default);
     }
 }

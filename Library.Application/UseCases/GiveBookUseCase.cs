@@ -25,7 +25,7 @@ namespace Library.Application.UseCases
             this.validationService = validationService;
         }
 
-        public async void Execute(BookRentalRequest request, CancellationToken cancellationToken = default)
+        public async Task Execute(BookRentalRequest request, CancellationToken cancellationToken = default)
         {
             await validationService.ValidateAsync(validator, request, cancellationToken);
             

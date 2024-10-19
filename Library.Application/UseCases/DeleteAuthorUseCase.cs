@@ -14,7 +14,7 @@ namespace Library.Application.UseCases
             this.unitOfWork = unitOfWork;
         }
 
-        public async void Execute(Guid id, CancellationToken cancellationToken = default)
+        public async Task Execute(Guid id, CancellationToken cancellationToken = default)
         {
             if (unitOfWork.AuthorRepository.GetByIdAsync(id, cancellationToken) == null)
             {

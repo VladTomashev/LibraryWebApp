@@ -23,7 +23,7 @@ namespace Library.Application.UseCases
             this.validator = validator;
             this.validationService = validationService;
         }
-        public async void Execute(AuthorUpdateRequest request, CancellationToken cancellationToken = default)
+        public async Task Execute(AuthorUpdateRequest request, CancellationToken cancellationToken = default)
         {
             await validationService.ValidateAsync(validator, request, cancellationToken);
             Author author = mapper.Map<Author>(request);
