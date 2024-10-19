@@ -75,9 +75,9 @@ namespace Library.WebApi.Controllers
 
         [HttpPut("{id}/end")]
         [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> EndBookRental(Guid bookRentalId, CancellationToken cancellationToken)
+        public async Task<IActionResult> EndBookRental(Guid id, CancellationToken cancellationToken)
         {
-            await returnBookUseCase.Execute(bookRentalId, cancellationToken);
+            await returnBookUseCase.Execute(id, cancellationToken);
             return Ok();
         }
 

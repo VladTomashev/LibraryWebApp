@@ -62,10 +62,10 @@ namespace Library.WebApi.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> UpdateAuthor([FromBody]AuthorUpdateRequest request,
+        public async Task<IActionResult> UpdateAuthor(Guid id, [FromBody]AuthorRequest request,
             CancellationToken cancellationToken)
         {
-            await updateAuthorUseCase.Execute(request, cancellationToken);
+            await updateAuthorUseCase.Execute(id, request, cancellationToken);
             return Ok();
         }
 

@@ -1,11 +1,9 @@
 ﻿using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Application.Interfaces.UseCases;
-using Library.Application.UseCases;
 using Library.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace Library.WebApi.Controllers
 {
@@ -100,9 +98,9 @@ namespace Library.WebApi.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> UpdateBook([FromBody] BookUpdateRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateBook(Guid id, [FromBody] BookRequest request, CancellationToken cancellationToken)
         {
-            await updateBookUseCase.Execute(request, cancellationToken);
+            await updateBookUseCase.Execute(id, request, cancellationToken);
             return Ok();
         }
     }

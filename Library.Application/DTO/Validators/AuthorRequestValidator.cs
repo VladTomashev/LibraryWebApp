@@ -27,15 +27,4 @@ namespace Library.Application.DTO.Validators
                 .LessThan(DateTime.Now).WithMessage("Author's date of birth cannot be in the future.");
         }
     }
-
-    public class AuthorUpdateRequestValidator : AbstractValidator<AuthorUpdateRequest>
-    {
-        public AuthorUpdateRequestValidator()
-        {
-            Include(new AuthorRequestValidator());
-
-            RuleFor(r => r.Id)
-                .NotEmpty().WithMessage("Author's ID is required");
-        }
-    }
 }

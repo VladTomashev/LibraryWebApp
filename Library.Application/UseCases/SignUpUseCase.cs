@@ -37,7 +37,8 @@ namespace Library.Application.UseCases
         {
             await validationService.ValidateAsync(validator, request, cancellationToken);
 
-            if (await unitOfWork.UserAuthRepository.GetByLoginAsync(request.Login, cancellationToken) != null)
+            UserAuth? userauth = await unitOfWork.UserAuthRepository.GetByLoginAsync(request.Login, cancellationToken);
+            if (userauth != null)
             {
                 throw new BadRequestException("Login is already in use");
             }
