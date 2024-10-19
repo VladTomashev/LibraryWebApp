@@ -7,9 +7,4 @@
         public required DateTime DateOfBirth { get; set; }
         public required string Country { get; set; }
     }
-
-    public class AuthorUpdateRequest : AuthorRequest
-    {
-        public required Guid Id { get; set; }
-    }
 }

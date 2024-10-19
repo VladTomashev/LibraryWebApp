@@ -9,9 +9,4 @@
         public required Guid AuthorId { get; set; }
         public string? ImagePath { get; set; }
     }
-
-    public class BookUpdateRequest : BookRequest
-    {
-        public required Guid Id { get; set; }
-    }
 }

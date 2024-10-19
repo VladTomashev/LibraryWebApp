@@ -40,7 +40,7 @@ namespace Library.Infrastructure.Repositories
 
         public async Task<Book> GetByIsbnAsync(string isbn, CancellationToken cancellationToken = default)
         {
-            return await db.Books.Where(b => b.Isbn == isbn).FirstAsync(cancellationToken);
+            return await db.Books.Where(b => b.Isbn == isbn).FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

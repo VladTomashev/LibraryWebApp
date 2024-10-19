@@ -22,7 +22,6 @@ namespace Library.Application.Mappers
                     AuthorId = b.AuthorId,
                     ImagePath = b.ImagePath
                 }));
-            CreateMap<BookUpdateRequest, Book>();
         }
     }
 }

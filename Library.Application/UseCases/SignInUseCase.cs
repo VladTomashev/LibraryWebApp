@@ -36,7 +36,7 @@ namespace Library.Application.UseCases
         {
             await validationService.ValidateAsync(validator, request, cancellationToken);
 
-            UserAuth userAuth = await unitOfWork.UserAuthRepository.GetByLoginAsync(request.Login, cancellationToken);
+            UserAuth? userAuth = await unitOfWork.UserAuthRepository.GetByLoginAsync(request.Login, cancellationToken);
             if (userAuth == null)
             {
                 throw new NotFoundException("User is not found");

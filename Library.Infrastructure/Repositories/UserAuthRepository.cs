@@ -13,7 +13,7 @@ namespace Library.Infrastructure.Repositories
 
         public async Task<UserAuth> GetByLoginAsync(string login, CancellationToken cancellationToken = default)
         {
-            return await db.UserAuths.Where(b => b.Login == login).FirstAsync(cancellationToken);
+            return await db.UserAuths.Where(b => b.Login == login).FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

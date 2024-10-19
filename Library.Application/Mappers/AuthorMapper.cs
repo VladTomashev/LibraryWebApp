@@ -20,7 +20,6 @@ namespace Library.Application.Mappers
                     Country = a.Country,
                     DateOfBirth = a.DateOfBirth
                 }));
-            CreateMap<AuthorUpdateRequest, Author>();
         }
     }
 }

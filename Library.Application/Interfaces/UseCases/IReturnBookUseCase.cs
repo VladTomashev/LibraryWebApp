@@ -2,6 +2,6 @@
 {
     public interface IReturnBookUseCase
     {
-        public void Execute(Guid bookRentalId, CancellationToken cancellationToken = default);
+        public Task Execute(Guid bookRentalId, CancellationToken cancellationToken = default);
     }
 }

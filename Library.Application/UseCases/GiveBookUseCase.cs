@@ -25,10 +25,20 @@ namespace Library.Application.UseCases
             this.validationService = validationService;
         }
 
-        public async void Execute(BookRentalRequest request, CancellationToken cancellationToken = default)
+        public async Task Execute(BookRentalRequest request, CancellationToken cancellationToken = default)
         {
             await validationService.ValidateAsync(validator, request, cancellationToken);
-            
+
+            if (await unitOfWork.BookRepository.GetByIdAsync(request.BookId, cancellationToken) == null)
+            {
+                throw new NotFoundException("Book not found");
+            }
+
+            if (await unitOfWork.UserProfileRepository.GetByIdAsync(request.UserProfileId, cancellationToken) == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+
             IEnumerable<BookRental> rentals = await unitOfWork.BookRentalRepository.GetAllAsync(cancellationToken);
             if (rentals.Any(r => r.BookId == request.BookId && r.IsReturned == false))
             {

@@ -17,12 +17,12 @@ namespace Library.Application.DTO.Validators
             RuleFor(r => r.Name)
                 .NotEmpty().WithMessage("Book's name is required")
                 .Length(1, 50).WithMessage("Book's name must be between 1 and 50 characters long.")
-                .Matches(@"^[A-Za-z0-9\s]*$").WithMessage("Book's name must contain only letters, numbers or spaces");
+                .Matches(@"^[A-Za-zА-Яа-я0-9\s]*$").WithMessage("Book's name must contain only letters, numbers or spaces");
 
             RuleFor(r => r.Genre)
                 .NotEmpty().WithMessage("Book's genre is required")
                 .Length(1, 50).WithMessage("Book's genre must be between 1 and 50 characters long.")
-                .Matches(@"^[A-Za-z\s]*$").WithMessage("Book's genre must contain only letters or spaces");
+                .Matches(@"^[A-Za-zА-Яа-я\s]*$").WithMessage("Book's genre must contain only letters or spaces");
 
             RuleFor(r => r.Description)
                 .NotEmpty().WithMessage("Book's description is required")
@@ -30,17 +30,6 @@ namespace Library.Application.DTO.Validators
 
             RuleFor(r => r.AuthorId)
                 .NotEmpty().WithMessage("Author is required");
-        }
-    }
-
-    public class BookUpdateRequestValidator : AbstractValidator<BookUpdateRequest>
-    {
-        public BookUpdateRequestValidator()
-        {
-            Include(new BookRequestValidator());
-
-            RuleFor(r => r.Id)
-                .NotEmpty().WithMessage("Book ID is required");
         }
     }
 }

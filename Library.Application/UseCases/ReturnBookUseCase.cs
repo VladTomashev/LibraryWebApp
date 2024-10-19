@@ -14,7 +14,7 @@ namespace Library.Application.UseCases
             this.unitOfWork = unitOfWork;
         }
 
-        public async void Execute(Guid bookRentalId, CancellationToken cancellationToken = default)
+        public async Task Execute(Guid bookRentalId, CancellationToken cancellationToken = default)
         {
             BookRental bookRental = await unitOfWork.BookRentalRepository.GetByIdAsync(bookRentalId, cancellationToken);
             if (bookRental == null)
