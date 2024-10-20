@@ -1,6 +1,7 @@
 ﻿using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Application.Interfaces.UseCases;
+using Library.Core.Entities;
 using Library.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -57,9 +58,11 @@ namespace Library.WebApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> GetAllUserProfiles(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllUserProfiles([FromQuery] PaginationParams paginationParams,
+            CancellationToken cancellationToken)
         {
-            IEnumerable<UserProfileResponse> response = await getAllUserProfilesUseCase.Execute(cancellationToken);
+            IEnumerable<UserProfileResponse> response = await getAllUserProfilesUseCase
+                .Execute(paginationParams,cancellationToken);
             return Ok(response);
         }
 

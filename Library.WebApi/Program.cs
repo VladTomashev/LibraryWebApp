@@ -9,6 +9,7 @@ using Library.Core.Interfaces;
 using Library.Infrastructure.EntityFramework;
 using Library.Infrastructure.Repositories;
 using Library.WebApi.Middlewares;
+using Library.WebApi.SwaggerConfiguration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -70,12 +71,14 @@ public class Program
                     new string[]{}
                 }
             });
+            opt.OperationFilter<FileUploadOperation>();
         });
 
         builder.Services.AddDbContext<DataContext>();
 
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IValidationService, ValidationService>();
+        builder.Services.AddScoped<IImageService, ImageService>();
 
         builder.Services.AddScoped<IAddAuthorUseCase, AddAuthorUseCase>();
         builder.Services.AddScoped<IAddBookUseCase, AddBookUseCase>();
@@ -102,6 +105,7 @@ public class Program
         builder.Services.AddScoped<ISignUpUseCase, SignUpUseCase>();
         builder.Services.AddScoped<IUpdateAuthorUseCase, UpdateAuthorUseCase>();
         builder.Services.AddScoped<IUpdateBookUseCase, UpdateBookUseCase>();
+        builder.Services.AddScoped<IUploadBookImageUseCase, UploadBookImageUseCase>();
 
         builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
         builder.Services.AddScoped<IBookRentalRepository, BookRentalRepository>();
@@ -117,6 +121,7 @@ public class Program
 
         var app = builder.Build();
 
+        app.UseStaticFiles();
         app.UseMiddleware<ExceptionHandlingMiddleware>();
         app.UseSwagger();
         app.UseSwaggerUI();

@@ -18,9 +18,10 @@ namespace Library.Application.UseCases
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<AuthorResponse>> Execute(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<AuthorResponse>> Execute(PaginationParams paginationParams, 
+            CancellationToken cancellationToken = default)
         {
-            IEnumerable<Author>? authors = await unitOfWork.AuthorRepository.GetAllAsync(cancellationToken);
+            IEnumerable<Author>? authors = await unitOfWork.AuthorRepository.GetAllAsync(paginationParams, cancellationToken);
             if (!authors.Any())
             {
                 throw new NotFoundException("Authors not found");

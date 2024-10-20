@@ -39,7 +39,7 @@ namespace Library.Application.UseCases
                 throw new NotFoundException("User not found");
             }
 
-            IEnumerable<BookRental> rentals = await unitOfWork.BookRentalRepository.GetAllAsync(cancellationToken);
+            IEnumerable<BookRental> rentals = await unitOfWork.BookRentalRepository.GetAllAsync(null, cancellationToken);
             if (rentals.Any(r => r.BookId == request.BookId && r.IsReturned == false))
             {
                 throw new BadRequestException("Book unavailable");

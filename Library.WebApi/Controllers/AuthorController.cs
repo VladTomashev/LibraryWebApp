@@ -1,6 +1,7 @@
 ﻿using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Application.Interfaces.UseCases;
+using Library.Core.Entities;
 using Library.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -47,9 +48,11 @@ namespace Library.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAuthors(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllAuthors([FromQuery] PaginationParams paginationParams,
+            CancellationToken cancellationToken)
         {
-            IEnumerable<AuthorResponse> response = await getAllAuthorsUseCase.Execute(cancellationToken);
+            IEnumerable<AuthorResponse> response = await getAllAuthorsUseCase
+                .Execute(paginationParams, cancellationToken);
             return Ok(response);
         }
 

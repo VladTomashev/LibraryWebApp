@@ -18,9 +18,11 @@ namespace Library.Application.UseCases
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<UserProfileResponse>> Execute(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<UserProfileResponse>> Execute(PaginationParams paginationParams, 
+            CancellationToken cancellationToken = default)
         {
-            IEnumerable<UserProfile>? userProfiles = await unitOfWork.UserProfileRepository.GetAllAsync(cancellationToken);
+            IEnumerable<UserProfile>? userProfiles = await unitOfWork.UserProfileRepository
+                .GetAllAsync(paginationParams, cancellationToken);
             if (!userProfiles.Any())
             {
                 throw new NotFoundException("Users not found");
