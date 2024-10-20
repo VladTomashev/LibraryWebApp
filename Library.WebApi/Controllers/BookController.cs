@@ -1,6 +1,7 @@
 ﻿using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Application.Interfaces.UseCases;
+using Library.Application.UseCases;
 using Library.Core.Entities;
 using Library.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -21,12 +22,13 @@ namespace Library.WebApi.Controllers
         private IGetBookByIsbnUseCase getBookByIsbnUseCase;
         private IGetBooksByAuthorIdUseCase getBooksByAuthorIdUseCase;
         private IUpdateBookUseCase updateBookUseCase;
+        private IUploadBookImageUseCase uploadBookImageUseCase;
 
         public BookController(IAddBookUseCase addBookUseCase, IDeleteBookUseCase deleteBookUseCase,
             IGetAllBooksUseCase getAllBooksUseCase, IGetAvailableBooksUseCase getAvailableBooksUseCase,
             IGetUnavailableBooksUseCase getUnavailableBooksUseCase, IGetBookByIdUseCase getBookByIdUseCase,
             IGetBookByIsbnUseCase getBookByIsbnUseCase, IGetBooksByAuthorIdUseCase getBooksByAuthorIdUseCase,
-            IUpdateBookUseCase updateBookUseCase)
+            IUpdateBookUseCase updateBookUseCase, IUploadBookImageUseCase uploadBookImageUseCase)
         {
             this.addBookUseCase = addBookUseCase;
             this.deleteBookUseCase = deleteBookUseCase;
@@ -37,6 +39,7 @@ namespace Library.WebApi.Controllers
             this.getBookByIsbnUseCase = getBookByIsbnUseCase;
             this.getBooksByAuthorIdUseCase = getBooksByAuthorIdUseCase;
             this.updateBookUseCase = updateBookUseCase;
+            this.uploadBookImageUseCase = uploadBookImageUseCase;
         }
 
         [HttpPost]
@@ -112,5 +115,15 @@ namespace Library.WebApi.Controllers
             await updateBookUseCase.Execute(id, request, cancellationToken);
             return Ok();
         }
+
+        [HttpPost("upload-image")]
+        public async Task<IActionResult> UploadImage(IFormFile image)
+        {
+            string imagePath = await uploadBookImageUseCase.UploadAsync(image);
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            return Ok(new { ImageUrl = $"{baseUrl}/images/books/{imagePath}" });
+
+        }
+
     }
 }
