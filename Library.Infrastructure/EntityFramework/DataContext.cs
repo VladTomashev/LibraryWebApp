@@ -6,6 +6,9 @@ namespace Library.Infrastructure.EntityFramework
 {
     public class DataContext : DbContext
     {
+
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+
         public DbSet<Book> Books { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<BookRental> BookRentals { get; set; }
@@ -20,8 +23,11 @@ namespace Library.Infrastructure.EntityFramework
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionString = ConfigurationHelper.GetConnectionString("DefaultConnection");
-            optionsBuilder.UseSqlServer(connectionString);
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connectionString = ConfigurationHelper.GetConnectionString("DefaultConnection");
+                optionsBuilder.UseSqlServer(connectionString);
+            }
         }
     }
 }
