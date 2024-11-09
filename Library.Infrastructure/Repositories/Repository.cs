@@ -19,13 +19,9 @@ namespace Library.Infrastructure.Repositories
             await db.Set<T>().AddAsync(entity, cancellationToken);
         }
 
-        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
         {
-            T entity = await db.Set<T>().FindAsync(new object[] { id }, cancellationToken);
-            if (entity != null)
-            {
-                db.Set<T>().Remove(entity);
-            }
+            db.Set<T>().Remove(entity);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync(PaginationParams? paginationParams, 

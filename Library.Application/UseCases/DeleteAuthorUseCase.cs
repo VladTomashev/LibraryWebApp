@@ -1,5 +1,5 @@
 ﻿using Library.Application.Exceptions;
-using Library.Application.Interfaces;
+using Library.Core.Interfaces;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
 
@@ -16,11 +16,12 @@ namespace Library.Application.UseCases
 
         public async Task Execute(Guid id, CancellationToken cancellationToken = default)
         {
-            if (unitOfWork.AuthorRepository.GetByIdAsync(id, cancellationToken) == null)
+            Author author = await unitOfWork.AuthorRepository.GetByIdAsync(id, cancellationToken);
+            if (author == null)
             {
                 throw new NotFoundException("Author not found");
             }
-            await unitOfWork.AuthorRepository.DeleteAsync(id, cancellationToken);
+            await unitOfWork.AuthorRepository.DeleteAsync(author, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }

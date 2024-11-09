@@ -1,6 +1,4 @@
-﻿using Library.Core.Interfaces;
-
-namespace Library.Application.Interfaces
+﻿namespace Library.Core.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {

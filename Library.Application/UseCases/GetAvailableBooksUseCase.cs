@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Library.Application.DTO.Responses;
 using Library.Application.Exceptions;
-using Library.Application.Interfaces;
+using Library.Core.Interfaces;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
 

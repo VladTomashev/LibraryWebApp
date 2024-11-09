@@ -1,10 +1,10 @@
 ﻿using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Application.Exceptions;
-using Library.Application.Interfaces;
-using Library.Application.Interfaces.Services;
+using Library.Core.Interfaces;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
+using Library.Infrastructure.Interfaces;
 
 namespace Library.Application.UseCases
 {
@@ -19,7 +19,7 @@ namespace Library.Application.UseCases
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<TokenResponse> Execute(TokenRequest request, CancellationToken cancellationToken = default)
+        public async Task<string> Execute(TokenRequest request, CancellationToken cancellationToken = default)
         {
             string requestAccessToken = request.AccessToken;
             string requestRefreshToken = request.RefreshToken;
@@ -45,17 +45,7 @@ namespace Library.Application.UseCases
             }
                 
             string newAccessToken = tokenService.GenerateAccessToken(principal.Claims);
-            string newRefreshToken = tokenService.GenerateRefreshToken();
-
-            refreshToken.Token = newRefreshToken;
-            await unitOfWork.RefreshTokenRepository.UpdateAsync(refreshToken);
-            await unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return new TokenResponse()
-            {
-                AccessToken = newAccessToken,
-                RefreshToken = newRefreshToken
-            };
+            return newAccessToken;
 
         }
     }

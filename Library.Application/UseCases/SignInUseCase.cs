@@ -3,12 +3,13 @@ using FluentValidation;
 using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Application.Exceptions;
-using Library.Application.Interfaces;
+using Library.Core.Interfaces;
 using Library.Application.Interfaces.Services;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Library.Infrastructure.Interfaces;
 
 namespace Library.Application.UseCases
 {

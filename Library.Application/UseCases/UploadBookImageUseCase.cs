@@ -1,5 +1,5 @@
-﻿using Library.Application.Interfaces.Services;
-using Library.Application.Interfaces.UseCases;
+﻿using Library.Application.Interfaces.UseCases;
+using Library.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
 
 namespace Library.Application.UseCases
