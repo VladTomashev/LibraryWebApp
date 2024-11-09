@@ -1,13 +1,14 @@
 using FluentValidation;
 using Library.Application.DTO.Validators;
-using Library.Application.Interfaces;
 using Library.Application.Interfaces.Services;
 using Library.Application.Interfaces.UseCases;
 using Library.Application.Services;
 using Library.Application.UseCases;
 using Library.Core.Interfaces;
 using Library.Infrastructure.EntityFramework;
+using Library.Infrastructure.Interfaces;
 using Library.Infrastructure.Repositories;
+using Library.Infrastructure.Services;
 using Library.WebApi.Middlewares;
 using Library.WebApi.SwaggerConfiguration;
 using Microsoft.IdentityModel.Tokens;

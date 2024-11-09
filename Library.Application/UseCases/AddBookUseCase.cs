@@ -2,7 +2,7 @@
 using FluentValidation;
 using Library.Application.DTO.Requests;
 using Library.Application.Interfaces.Services;
-using Library.Application.Interfaces;
+using Library.Core.Interfaces;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
 using Library.Application.Exceptions;
@@ -32,6 +32,10 @@ namespace Library.Application.UseCases
             if (await unitOfWork.AuthorRepository.GetByIdAsync(request.AuthorId, cancellationToken) == null)
             {
                 throw new NotFoundException("Author not found");
+            }
+            if (await unitOfWork.BookRepository.GetByIsbnAsync(request.Isbn, cancellationToken) != null)
+            {
+                throw new NotFoundException("Book with this isbn already exists");
             }
 
             Book book = mapper.Map<Book>(request);

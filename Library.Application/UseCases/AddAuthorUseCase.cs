@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Library.Application.DTO.Requests;
-using Library.Application.Interfaces;
+using Library.Core.Interfaces;
 using Library.Application.Interfaces.Services;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;

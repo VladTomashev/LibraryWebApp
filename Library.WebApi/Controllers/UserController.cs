@@ -52,7 +52,7 @@ namespace Library.WebApi.Controllers
         [Authorize]
         public async Task<IActionResult> RefreshToken([FromBody] TokenRequest request, CancellationToken cancellationToken)
         {
-            TokenResponse response = await refreshTokenUseCase.Execute(request, cancellationToken);
+            string response = await refreshTokenUseCase.Execute(request, cancellationToken);
             return Ok(response);
         }
 
