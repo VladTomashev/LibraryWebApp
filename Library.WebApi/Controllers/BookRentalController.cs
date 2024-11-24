@@ -2,7 +2,6 @@
 using Library.Application.DTO.Responses;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
-using Library.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,53 +33,65 @@ namespace Library.WebApi.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> GetAllBookRentals([FromQuery] PaginationParams paginationParams,
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> GetAllBookRentals([FromQuery] GetAllBookRentalsRequest request,
             CancellationToken cancellationToken)
         {
             IEnumerable<BookRentalResponse> response = await getAllBookRentalsUseCase
-                .Execute(paginationParams, cancellationToken);
+                .Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> GetBookRentalById(Guid id, CancellationToken cancellationToken)
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> GetBookRentalById([FromQuery] GetBookRentalByIdRequest request,
+            CancellationToken cancellationToken)
         {
-            BookRentalResponse response = await getBookRentalByIdUseCase.Execute(id, cancellationToken);
+            BookRentalResponse response = await getBookRentalByIdUseCase.Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet("user/{id}")]
-        [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> GetBookRentalsByUserId(Guid id, CancellationToken cancellationToken)
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> GetBookRentalsByUserId([FromQuery] GetBookRentalsByUserIdRequest request,
+            CancellationToken cancellationToken)
         {
-            IEnumerable<BookRentalResponse> response = await getBookRentalsByUserIdUseCase.Execute(id, cancellationToken);
+            IEnumerable<BookRentalResponse> response = await getBookRentalsByUserIdUseCase
+                .Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet("my")]
         [Authorize]
-        public async Task<IActionResult> GetMyBookRentals(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetMyBookRentals([FromQuery] PaginationParams paginationParams,
+            CancellationToken cancellationToken)
         {
-            Guid myId = await getIdByJwtUseCase.Execute(HttpContext.User, cancellationToken);
-            IEnumerable<BookRentalResponse> response = await getBookRentalsByUserIdUseCase.Execute(myId, cancellationToken);
+            Guid myId = await getIdByJwtUseCase
+                .Execute(new GetIdByJwtRequest { Principal = HttpContext.User }, cancellationToken);
+
+            GetBookRentalsByUserIdRequest request = 
+                new GetBookRentalsByUserIdRequest { UserId = myId, PaginationParams = paginationParams };
+
+            IEnumerable<BookRentalResponse> response = await getBookRentalsByUserIdUseCase
+                .Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> AddBookRental([FromBody]BookRentalRequest request, CancellationToken cancellationToken)
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> AddBookRental([FromBody]GiveBookRequest request,
+            CancellationToken cancellationToken)
         {
             await giveBookUseCase.Execute(request, cancellationToken);
             return Ok();
         }
 
         [HttpPut("{id}/end")]
-        [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> EndBookRental(Guid id, CancellationToken cancellationToken)
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> EndBookRental([FromQuery] ReturnBookRequest request,
+            CancellationToken cancellationToken)
         {
-            await returnBookUseCase.Execute(id, cancellationToken);
+            await returnBookUseCase.Execute(request, cancellationToken);
             return Ok();
         }
 

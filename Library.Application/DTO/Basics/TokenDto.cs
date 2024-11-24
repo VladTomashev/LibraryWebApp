@@ -1,6 +1,6 @@
-﻿namespace Library.Application.DTO.Requests
+﻿namespace Library.Application.DTO.Basics
 {
-    public class TokenRequest
+    public class TokenDto
     {
         public required string AccessToken { get; set; }
         public required string RefreshToken { get; set; }

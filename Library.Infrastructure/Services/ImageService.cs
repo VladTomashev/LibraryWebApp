@@ -1,4 +1,4 @@
-﻿using Library.Infrastructure.Interfaces;
+﻿using Library.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 

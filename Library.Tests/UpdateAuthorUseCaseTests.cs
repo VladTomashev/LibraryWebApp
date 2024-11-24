@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Library.Application.DTO.Basics;
 using Library.Application.DTO.Requests;
 using Library.Application.Exceptions;
 using Library.Application.Interfaces;
 using Library.Application.Interfaces.Services;
 using Library.Application.UseCases;
 using Library.Core.Entities;
+using Library.Core.Interfaces;
 using Moq;
 using Xunit;
 
@@ -15,7 +17,7 @@ namespace Library.Tests.UseCases
     {
         private readonly Mock<IUnitOfWork> unitOfWorkMock;
         private readonly Mock<IMapper> mapperMock;
-        private readonly Mock<IValidator<AuthorRequest>> validatorMock;
+        private readonly Mock<IValidator<UpdateAuthorRequest>> validatorMock;
         private readonly Mock<IValidationService> validationServiceMock;
         private readonly UpdateAuthorUseCase useCase;
 
@@ -23,7 +25,7 @@ namespace Library.Tests.UseCases
         {
             unitOfWorkMock = new Mock<IUnitOfWork>();
             mapperMock = new Mock<IMapper>();
-            validatorMock = new Mock<IValidator<AuthorRequest>>();
+            validatorMock = new Mock<IValidator<UpdateAuthorRequest>>();
             validationServiceMock = new Mock<IValidationService>();
 
             useCase = new UpdateAuthorUseCase(
@@ -37,12 +39,18 @@ namespace Library.Tests.UseCases
         public async Task Execute_ValidRequest_UpdatesAuthorSuccessfully()
         {
             var authorId = Guid.NewGuid();
-            var request = new AuthorRequest
+            var authorDto = new AuthorDto
             {
                 FirstName = "John",
                 LastName = "Doe",
                 Country = "USA",
                 DateOfBirth = DateTime.Now.AddYears(-30)
+            };
+
+            var request = new UpdateAuthorRequest
+            { 
+                AuthorDto =  authorDto,
+                AuthorId = authorId,
             };
 
             var author = new Author
@@ -51,7 +59,7 @@ namespace Library.Tests.UseCases
                 FirstName = "John",
                 LastName = "Doe",
                 Country = "USA",
-                DateOfBirth = request.DateOfBirth
+                DateOfBirth = request.AuthorDto.DateOfBirth
             };
 
             validationServiceMock
@@ -72,7 +80,7 @@ namespace Library.Tests.UseCases
                 .Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            await useCase.Execute(authorId, request);
+            await useCase.Execute(request);
 
             validationServiceMock.Verify(v => v.ValidateAsync(validatorMock.Object, request, It.IsAny<CancellationToken>()), Times.Once);
             unitOfWorkMock.Verify(u => u.AuthorRepository.GetByIdAsync(authorId, It.IsAny<CancellationToken>()), Times.Once);

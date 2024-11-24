@@ -1,7 +1,9 @@
-﻿namespace Library.Application.Interfaces.UseCases
+﻿using Library.Application.DTO.Requests;
+
+namespace Library.Application.Interfaces.UseCases
 {
     public interface IDeleteBookUseCase
     {
-        public Task Execute(Guid id, CancellationToken cancellationToken = default);
+        public Task Execute(DeleteBookRequest request, CancellationToken cancellationToken = default);
     }
 }

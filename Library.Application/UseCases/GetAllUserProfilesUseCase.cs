@@ -4,6 +4,7 @@ using Library.Application.Exceptions;
 using Library.Core.Interfaces;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
+using Library.Application.DTO.Requests;
 
 namespace Library.Application.UseCases
 {
@@ -18,11 +19,11 @@ namespace Library.Application.UseCases
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<UserProfileResponse>> Execute(PaginationParams paginationParams, 
+        public async Task<IEnumerable<UserProfileResponse>> Execute(GetAllUserProfilesRequest request, 
             CancellationToken cancellationToken = default)
         {
             IEnumerable<UserProfile>? userProfiles = await unitOfWork.UserProfileRepository
-                .GetAllAsync(paginationParams, cancellationToken);
+                .GetAllAsync(request.PaginationParams, cancellationToken);
             if (!userProfiles.Any())
             {
                 throw new NotFoundException("Users not found");

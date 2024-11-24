@@ -10,7 +10,6 @@ using Library.Application.Exceptions;
 using Library.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Library.Core.Enums;
-using Library.Infrastructure.Interfaces;
 
 namespace Library.Application.UseCases
 {

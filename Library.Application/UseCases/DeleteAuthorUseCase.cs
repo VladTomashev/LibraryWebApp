@@ -2,6 +2,7 @@
 using Library.Core.Interfaces;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
+using Library.Application.DTO.Requests;
 
 namespace Library.Application.UseCases
 {
@@ -14,9 +15,9 @@ namespace Library.Application.UseCases
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task Execute(Guid id, CancellationToken cancellationToken = default)
+        public async Task Execute(DeleteAuthorRequest request, CancellationToken cancellationToken = default)
         {
-            Author author = await unitOfWork.AuthorRepository.GetByIdAsync(id, cancellationToken);
+            Author author = await unitOfWork.AuthorRepository.GetByIdAsync(request.AuthorId, cancellationToken);
             if (author == null)
             {
                 throw new NotFoundException("Author not found");

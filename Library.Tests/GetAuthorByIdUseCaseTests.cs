@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Application.Exceptions;
 using Library.Application.Interfaces;
 using Library.Application.UseCases;
 using Library.Core.Entities;
+using Library.Core.Interfaces;
 using Moq;
 using Xunit;
 
@@ -27,6 +29,8 @@ namespace Library.Tests.UseCases
         {
             var authorId = Guid.NewGuid();
             var author = new Author { Id = authorId, FirstName = "Ivan", LastName = "Ivanov", Country = "Russia", DateOfBirth = DateTime.Now.AddYears(-100) };
+            var request = new GetAuthorByIdRequest
+            { AuthorId = authorId };
 
             var authorResponse = new AuthorResponse
             {
@@ -45,7 +49,7 @@ namespace Library.Tests.UseCases
                 .Setup(m => m.Map<AuthorResponse>(author))
                 .Returns(authorResponse);
 
-            var result = await useCase.Execute(authorId);
+            var result = await useCase.Execute(request);
 
             Assert.NotNull(result);
             Assert.Equal(authorResponse.FirstName, result.FirstName);

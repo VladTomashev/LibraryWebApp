@@ -4,6 +4,6 @@ namespace Library.Application.Interfaces.UseCases
 {
     public interface IRefreshTokenUseCase
     {
-        public Task<string> Execute (TokenRequest request, CancellationToken cancellationToken = default);
+        public Task<string> Execute (RefreshTokenRequest request, CancellationToken cancellationToken = default);
     }
 }

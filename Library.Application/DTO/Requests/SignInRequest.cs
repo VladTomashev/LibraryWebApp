@@ -1,4 +1,4 @@
-﻿namespace Library.Application.DTO.Requests
+namespace Library.Application.DTO.Requests
 {
     public class SignInRequest
     {

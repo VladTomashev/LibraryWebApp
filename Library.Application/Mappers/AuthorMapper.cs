@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Library.Application.DTO.Basics;
 using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Core.Entities;
@@ -10,7 +11,7 @@ namespace Library.Application.Mappers
         public AuthorMapper()
         {
             CreateMap<Author, AuthorResponse>();
-            CreateMap<AuthorRequest, Author>();
+            CreateMap<AuthorDto, Author>();
             CreateMap<IEnumerable<Author>, IEnumerable<AuthorResponse>>()
                 .ConvertUsing(authors => authors.Select(a => new AuthorResponse
                 {
@@ -20,6 +21,7 @@ namespace Library.Application.Mappers
                     Country = a.Country,
                     DateOfBirth = a.DateOfBirth
                 }));
+
         }
     }
 }

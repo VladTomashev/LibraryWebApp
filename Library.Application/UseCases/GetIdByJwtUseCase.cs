@@ -3,7 +3,7 @@ using Library.Core.Interfaces;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
 using System.Security.Claims;
-using System.Security.Principal;
+using Library.Application.DTO.Requests;
 
 namespace Library.Application.UseCases
 {
@@ -16,9 +16,9 @@ namespace Library.Application.UseCases
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<Guid> Execute(ClaimsPrincipal principal, CancellationToken cancellationToken = default)
+        public async Task<Guid> Execute(GetIdByJwtRequest request, CancellationToken cancellationToken = default)
         {
-            string? login = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            string? login = request.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
             if (login == null)
                 throw new NotFoundException("User not found");
 

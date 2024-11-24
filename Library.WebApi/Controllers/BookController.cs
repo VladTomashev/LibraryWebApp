@@ -1,9 +1,6 @@
 ﻿using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Application.Interfaces.UseCases;
-using Library.Application.UseCases;
-using Library.Core.Entities;
-using Library.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,83 +40,86 @@ namespace Library.WebApi.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> AddBook([FromBody] BookRequest request, CancellationToken cancellationToken)
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> AddBook([FromBody] AddBookRequest request, CancellationToken cancellationToken)
         {
             await addBookUseCase.Execute(request, cancellationToken);
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> DeleteBook(Guid id, CancellationToken cancellationToken)
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> DeleteBook([FromQuery] DeleteBookRequest request, CancellationToken cancellationToken)
         {
-            await deleteBookUseCase.Execute(id, cancellationToken);
+            await deleteBookUseCase.Execute(request, cancellationToken);
             return Ok();
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllBooks([FromQuery] PaginationParams paginationParams, 
+        public async Task<IActionResult> GetAllBooks([FromQuery] GetAllBooksRequest request, 
             CancellationToken cancellationToken)
         {
             IEnumerable<BookResponse> response = await getAllBooksUseCase
-                .Execute(paginationParams, cancellationToken);
+                .Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet("available")]
-        public async Task<IActionResult> GetAvailableBooks([FromQuery] PaginationParams paginationParams, 
+        public async Task<IActionResult> GetAvailableBooks([FromQuery] GetAvailableBooksRequest request, 
             CancellationToken cancellationToken)
         {
             IEnumerable<BookResponse> response = await getAvailableBooksUseCase
-                .Execute(paginationParams, cancellationToken);
+                .Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet("unavailable")]
-        public async Task<IActionResult> GetUnavailableBooks([FromQuery] PaginationParams paginationParams, 
+        public async Task<IActionResult> GetUnavailableBooks([FromQuery] GetUnavailableBooksRequest request, 
             CancellationToken cancellationToken)
         {
             IEnumerable<BookResponse> response = await getUnavailableBooksUseCase
-                .Execute(paginationParams, cancellationToken);
+                .Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBookById(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetBookById([FromQuery] GetBookByIdRequest request,
+            CancellationToken cancellationToken)
         {
-            BookResponse response = await getBookByIdUseCase.Execute(id, cancellationToken);
+            BookResponse response = await getBookByIdUseCase.Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet("isbn/{isbn}")]
-        public async Task<IActionResult> GetBookByIsbn(string isbn, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetBookByIsbn([FromQuery] GetBookByIsbnRequest request,
+            CancellationToken cancellationToken)
         {
-            BookResponse response = await getBookByIsbnUseCase.Execute(isbn, cancellationToken);
+            BookResponse response = await getBookByIsbnUseCase.Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet("author/{id}")]
-        public async Task<IActionResult> GetBooksByAuthorId(Guid id, [FromQuery] PaginationParams paginationParams,
+        public async Task<IActionResult> GetBooksByAuthorId([FromQuery] GetBooksByAuthorIdRequest request,
             CancellationToken cancellationToken)
         {
             IEnumerable<BookResponse> response = await getBooksByAuthorIdUseCase
-                .Execute(id, paginationParams, cancellationToken);
+                .Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> UpdateBook(Guid id, [FromBody] BookRequest request, CancellationToken cancellationToken)
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> UpdateBook([FromBody] UpdateBookRequest request,
+            CancellationToken cancellationToken)
         {
-            await updateBookUseCase.Execute(id, request, cancellationToken);
+            await updateBookUseCase.Execute(request, cancellationToken);
             return Ok();
         }
 
         [HttpPost("upload-image")]
-        public async Task<IActionResult> UploadImage(IFormFile image)
+        public async Task<IActionResult> UploadImage([FromForm] UploadBookImageRequest request)
         {
-            string imagePath = await uploadBookImageUseCase.UploadAsync(image);
+            string imagePath = await uploadBookImageUseCase.UploadAsync(request);
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
             return Ok(new { ImageUrl = $"{baseUrl}/images/books/{imagePath}" });
 

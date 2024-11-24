@@ -4,6 +4,6 @@ namespace Library.Application.Interfaces.UseCases
 {
     public interface IAddAuthorUseCase
     {
-        public Task Execute(AuthorRequest request, CancellationToken cancellationToken = default);
+        public Task Execute(AddAuthorRequest request, CancellationToken cancellationToken = default);
     }
 }

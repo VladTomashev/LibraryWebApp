@@ -1,7 +1,9 @@
-﻿using Library.Application.Exceptions;
+﻿using Library.Application.DTO.Requests;
+using Library.Application.Exceptions;
 using Library.Application.Interfaces;
 using Library.Application.UseCases;
 using Library.Core.Entities;
+using Library.Core.Interfaces;
 using Moq;
 using Xunit;
 
@@ -23,23 +25,25 @@ namespace Library.Tests.UseCases
         {
             var authorId = Guid.NewGuid();
             var author = new Author { Id = authorId };
+            var request = new DeleteAuthorRequest
+            { AuthorId = authorId };
 
             unitOfWorkMock
                 .Setup(u => u.AuthorRepository.GetByIdAsync(authorId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(author);
 
             unitOfWorkMock
-                .Setup(u => u.AuthorRepository.DeleteAsync(authorId, It.IsAny<CancellationToken>()))
+                .Setup(u => u.AuthorRepository.DeleteAsync(author, It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
             unitOfWorkMock
                 .Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(1));
 
-            await useCase.Execute(authorId);
+            await useCase.Execute(request);
 
             unitOfWorkMock.Verify(u => u.AuthorRepository.GetByIdAsync(authorId, It.IsAny<CancellationToken>()), Times.Once);
-            unitOfWorkMock.Verify(u => u.AuthorRepository.DeleteAsync(authorId, It.IsAny<CancellationToken>()), Times.Once);
+            unitOfWorkMock.Verify(u => u.AuthorRepository.DeleteAsync(author, It.IsAny<CancellationToken>()), Times.Once);
             unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
     }

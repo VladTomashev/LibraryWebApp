@@ -4,6 +4,7 @@ using Library.Application.Exceptions;
 using Library.Core.Interfaces;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
+using Library.Application.DTO.Requests;
 
 namespace Library.Application.UseCases
 {
@@ -18,9 +19,11 @@ namespace Library.Application.UseCases
             this.mapper = mapper;
         }
 
-        public async Task<BookRentalResponse> Execute(Guid id, CancellationToken cancellationToken = default)
+        public async Task<BookRentalResponse> Execute(GetBookRentalByIdRequest request,
+            CancellationToken cancellationToken = default)
         {
-            BookRental? bookRental = await unitOfWork.BookRentalRepository.GetByIdAsync(id, cancellationToken);
+            BookRental? bookRental = await unitOfWork.BookRentalRepository
+                .GetByIdAsync(request.BookRentalId, cancellationToken);
             if (bookRental == null)
             {
                 throw new NotFoundException("Book rental not found");

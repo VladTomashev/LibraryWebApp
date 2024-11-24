@@ -1,6 +1,6 @@
-﻿namespace Library.Application.DTO.Requests
+﻿namespace Library.Application.DTO.Basics
 {
-    public class AuthorRequest
+    public class AuthorDto
     {
         public required string FirstName { get; set; }
         public required string LastName { get; set; }

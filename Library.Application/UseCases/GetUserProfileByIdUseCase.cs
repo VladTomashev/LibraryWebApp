@@ -4,6 +4,7 @@ using Library.Application.Exceptions;
 using Library.Core.Interfaces;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
+using Library.Application.DTO.Requests;
 
 namespace Library.Application.UseCases
 {
@@ -18,9 +19,11 @@ namespace Library.Application.UseCases
             this.mapper = mapper;
         }
 
-        public async Task<UserProfileResponse> Execute(Guid id, CancellationToken cancellationToken = default)
+        public async Task<UserProfileResponse> Execute(GetUserProfileByIdRequest request,
+            CancellationToken cancellationToken = default)
         {
-            UserProfile? userProfile = await unitOfWork.UserProfileRepository.GetByIdAsync(id, cancellationToken);
+            UserProfile? userProfile = await unitOfWork.UserProfileRepository
+                .GetByIdAsync(request.UserId, cancellationToken);
             if (userProfile == null)
             {
                 throw new NotFoundException("User not found");
