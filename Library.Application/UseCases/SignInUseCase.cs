@@ -9,7 +9,6 @@ using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
-using Library.Infrastructure.Interfaces;
 
 namespace Library.Application.UseCases
 {

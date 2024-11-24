@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using Library.Application.DTO.Requests;
+using Library.Application.DTO.Basics;
 
-namespace Library.Application.DTO.Validators
+namespace Library.Application.Validators.DtoValidators
 {
-    public class BookRentalRequestValidator : AbstractValidator<BookRentalRequest>
+    public class BookRentalDtoValidator : AbstractValidator<BookRentalDto>
     {
-        public BookRentalRequestValidator()
+        public BookRentalDtoValidator()
         {
             RuleFor(r => r.UserProfileId)
                 .NotEmpty().WithMessage("User is required");

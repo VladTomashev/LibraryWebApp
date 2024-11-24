@@ -1,5 +1,6 @@
-﻿using Library.Application.Interfaces.UseCases;
-using Library.Infrastructure.Interfaces;
+﻿using Library.Application.DTO.Requests;
+using Library.Application.Interfaces.Services;
+using Library.Application.Interfaces.UseCases;
 using Microsoft.AspNetCore.Http;
 
 namespace Library.Application.UseCases
@@ -13,20 +14,21 @@ namespace Library.Application.UseCases
             _imageService = imageService;
         }
 
-        public async Task<string> UploadAsync(IFormFile imageFile)
+        public async Task<string> UploadAsync(UploadBookImageRequest request)
         {
-            if (imageFile == null || imageFile.Length == 0)
+            if (request.ImageFile == null || request.ImageFile.Length == 0)
             {
                 throw new ArgumentException("The provided image file is invalid.");
             }
 
-            var imagePath = await _imageService.SaveImageAsync(imageFile);
+            var imagePath = await _imageService.SaveImageAsync(request.ImageFile);
             if (string.IsNullOrEmpty(imagePath))
             {
                 throw new InvalidOperationException("Failed to upload image.");
             }
 
-            return imagePath; 
+            return imagePath;
         }
+
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace Library.Application.DTO.Requests
+﻿namespace Library.Application.DTO.Basics
 {
-    public class BookRequest
+    public class BookDto
     {
         public required string Isbn { get; set; }
         public required string Name { get; set; }

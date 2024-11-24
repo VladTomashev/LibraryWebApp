@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using Library.Application.DTO.Requests;
+using Library.Application.DTO.Basics;
 
-namespace Library.Application.DTO.Validators
+namespace Library.Application.Validators.DtoValidators
 {
-    public class AuthorRequestValidator : AbstractValidator<AuthorRequest>
+    public class AuthorDtoValidator : AbstractValidator<AuthorDto>
     {
-        public AuthorRequestValidator()
+        public AuthorDtoValidator()
         {
             RuleFor(r => r.FirstName)
                 .NotEmpty().WithMessage("Author's firstname is required")

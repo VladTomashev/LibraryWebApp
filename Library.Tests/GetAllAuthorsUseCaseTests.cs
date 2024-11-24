@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Application.Interfaces;
 using Library.Application.UseCases;
 using Library.Core.Entities;
+using Library.Core.Interfaces;
 using Moq;
 using Xunit;
 
@@ -36,24 +38,25 @@ namespace Library.Tests.UseCases
                 new AuthorResponse { Id = authors[1].Id, FirstName = "Vlad", LastName = "Vladov", Country = "Belarus", DateOfBirth = authors[1].DateOfBirth }
             };
 
-            var paginationParams = new PaginationParams();
+            var request = new GetAllAuthorsRequest
+            { PaginationParams = new PaginationParams() };
 
             unitOfWorkMock
-                .Setup(u => u.AuthorRepository.GetAllAsync(paginationParams, It.IsAny<CancellationToken>()))
+                .Setup(u => u.AuthorRepository.GetAllAsync(request.PaginationParams, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(authors);
 
             mapperMock
                 .Setup(m => m.Map<IEnumerable<AuthorResponse>>(authors))
                 .Returns(authorResponses);
 
-            var result = await useCase.Execute(paginationParams);
+            var result = await useCase.Execute(request);
 
             Assert.NotNull(result);
             Assert.Equal(2, result.Count());
             Assert.Equal(authorResponses.First().FirstName, result.First().FirstName);
             Assert.Equal(authorResponses.Last().LastName, result.Last().LastName);
 
-            unitOfWorkMock.Verify(u => u.AuthorRepository.GetAllAsync(paginationParams, It.IsAny<CancellationToken>()), Times.Once);
+            unitOfWorkMock.Verify(u => u.AuthorRepository.GetAllAsync(request.PaginationParams, It.IsAny<CancellationToken>()), Times.Once);
             mapperMock.Verify(m => m.Map<IEnumerable<AuthorResponse>>(authors), Times.Once);
         }
     }

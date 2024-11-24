@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Library.Application.DTO.Basics;
 using Library.Application.DTO.Requests;
 using Library.Application.Interfaces;
 using Library.Application.Interfaces.Services;
 using Library.Application.UseCases;
 using Library.Core.Entities;
+using Library.Core.Interfaces;
 using Moq;
 using Xunit;
 
@@ -14,7 +16,7 @@ namespace Library.Tests.UseCases
     {
         private readonly Mock<IUnitOfWork> unitOfWorkMock;
         private readonly Mock<IMapper> mapperMock;
-        private readonly Mock<IValidator<AuthorRequest>> validatorMock;
+        private readonly Mock<IValidator<AddAuthorRequest>> validatorMock;
         private readonly Mock<IValidationService> validationServiceMock;
         private readonly AddAuthorUseCase useCase;
 
@@ -22,7 +24,7 @@ namespace Library.Tests.UseCases
         {
             unitOfWorkMock = new Mock<IUnitOfWork>();
             mapperMock = new Mock<IMapper>();
-            validatorMock = new Mock<IValidator<AuthorRequest>>();
+            validatorMock = new Mock<IValidator<AddAuthorRequest>>();
             validationServiceMock = new Mock<IValidationService>();
 
             useCase = new AddAuthorUseCase(
@@ -36,13 +38,16 @@ namespace Library.Tests.UseCases
         public async Task Execute_ValidRequest_AddsAuthorSuccessfully()
         {
 
-            var request = new AuthorRequest
+            var dto = new AuthorDto
             {
                 FirstName = "Bob",
                 LastName = "Bobov",
                 Country = "USA",
                 DateOfBirth = DateTime.Now.AddYears(-30)
             };
+
+            var request = new AddAuthorRequest
+            { AuthorDto = dto };
 
             var author = new Author
             {

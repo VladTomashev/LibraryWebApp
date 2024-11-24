@@ -1,8 +1,6 @@
 ﻿using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Application.Interfaces.UseCases;
-using Library.Core.Entities;
-using Library.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,8 +28,8 @@ namespace Library.WebApi.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> AddAuthor([FromBody] AuthorRequest request,
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> AddAuthor([FromBody] AddAuthorRequest request,
             CancellationToken cancellationToken)
         {
             await addAuthorUseCase.Execute(request, cancellationToken);
@@ -39,36 +37,37 @@ namespace Library.WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> DeleteAuthor(Guid id,
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> DeleteAuthor([FromQuery] DeleteAuthorRequest request,
             CancellationToken cancellationToken)
         {
-            await deleteAuthorUseCase.Execute(id, cancellationToken);
+            await deleteAuthorUseCase.Execute(request, cancellationToken);
             return Ok();
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAuthors([FromQuery] PaginationParams paginationParams,
+        public async Task<IActionResult> GetAllAuthors([FromQuery] GetAllAuthorsRequest request,
             CancellationToken cancellationToken)
         {
             IEnumerable<AuthorResponse> response = await getAllAuthorsUseCase
-                .Execute(paginationParams, cancellationToken);
+                .Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAuthorById(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAuthorById([FromQuery] GetAuthorByIdRequest request,
+            CancellationToken cancellationToken)
         {
-            AuthorResponse response = await getAuthorByIdUseCase.Execute(id, cancellationToken);
+            AuthorResponse response = await getAuthorByIdUseCase.Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> UpdateAuthor(Guid id, [FromBody]AuthorRequest request,
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> UpdateAuthor([FromBody] UpdateAuthorRequest request,
             CancellationToken cancellationToken)
         {
-            await updateAuthorUseCase.Execute(id, request, cancellationToken);
+            await updateAuthorUseCase.Execute(request, cancellationToken);
             return Ok();
         }
 

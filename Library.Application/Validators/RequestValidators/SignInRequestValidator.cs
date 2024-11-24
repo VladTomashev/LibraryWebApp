@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Library.Application.DTO.Requests;
 
-namespace Library.Application.DTO.Validators
+namespace Library.Application.Validators.RequestValidators
 {
     public class SignInRequestValidator : AbstractValidator<SignInRequest>
     {

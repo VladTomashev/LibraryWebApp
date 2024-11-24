@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using Library.Application.DTO.Requests;
+using Library.Application.DTO.Basics;
 
-namespace Library.Application.DTO.Validators
+namespace Library.Application.Validators.DtoValidators
 {
-    public class BookRequestValidator : AbstractValidator<BookRequest>
+    public class BookDtoValidator : AbstractValidator<BookDto>
     {
-        public BookRequestValidator()
+        public BookDtoValidator()
         {
             RuleFor(r => r.Isbn)
                 .NotEmpty().WithMessage("ISBN is required")

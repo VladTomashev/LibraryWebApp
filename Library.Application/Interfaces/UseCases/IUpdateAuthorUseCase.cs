@@ -4,6 +4,6 @@ namespace Library.Application.Interfaces.UseCases
 {
     public interface IUpdateAuthorUseCase
     {
-        public Task Execute(Guid id, AuthorRequest request, CancellationToken cancellationToken = default);
+        public Task Execute(UpdateAuthorRequest request, CancellationToken cancellationToken = default);
     }
 }

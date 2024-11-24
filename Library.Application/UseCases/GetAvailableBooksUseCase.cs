@@ -4,6 +4,7 @@ using Library.Application.Exceptions;
 using Library.Core.Interfaces;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
+using Library.Application.DTO.Requests;
 
 namespace Library.Application.UseCases
 {
@@ -18,11 +19,11 @@ namespace Library.Application.UseCases
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<BookResponse>> Execute(PaginationParams paginationParams, 
+        public async Task<IEnumerable<BookResponse>> Execute(GetAvailableBooksRequest request, 
             CancellationToken cancellationToken = default)
         {
             IEnumerable<Book>? books = await unitOfWork.BookRepository
-                .GetAvailableBooksAsync(paginationParams, cancellationToken);
+                .GetAvailableBooksAsync(request.PaginationParams, cancellationToken);
             if (!books.Any())
             {
                 throw new NotFoundException("Books not found");

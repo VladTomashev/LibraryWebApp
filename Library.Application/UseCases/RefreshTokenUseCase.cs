@@ -1,10 +1,9 @@
 ﻿using Library.Application.DTO.Requests;
-using Library.Application.DTO.Responses;
 using Library.Application.Exceptions;
 using Library.Core.Interfaces;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
-using Library.Infrastructure.Interfaces;
+using Library.Application.Interfaces.Services;
 
 namespace Library.Application.UseCases
 {
@@ -19,10 +18,10 @@ namespace Library.Application.UseCases
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<string> Execute(TokenRequest request, CancellationToken cancellationToken = default)
+        public async Task<string> Execute(RefreshTokenRequest request, CancellationToken cancellationToken = default)
         {
-            string requestAccessToken = request.AccessToken;
-            string requestRefreshToken = request.RefreshToken;
+            string requestAccessToken = request.TokenDto.AccessToken;
+            string requestRefreshToken = request.TokenDto.RefreshToken;
 
             var principal = tokenService.GetPrincipalFromExpiredToken(requestAccessToken);
             string login = principal.Identity.Name;

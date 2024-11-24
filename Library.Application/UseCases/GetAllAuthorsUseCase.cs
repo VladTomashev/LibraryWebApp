@@ -4,6 +4,7 @@ using Library.Application.Exceptions;
 using Library.Core.Interfaces;
 using Library.Application.Interfaces.UseCases;
 using Library.Core.Entities;
+using Library.Application.DTO.Requests;
 
 namespace Library.Application.UseCases
 {
@@ -18,10 +19,12 @@ namespace Library.Application.UseCases
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<AuthorResponse>> Execute(PaginationParams paginationParams, 
+        public async Task<IEnumerable<AuthorResponse>> Execute(GetAllAuthorsRequest request, 
             CancellationToken cancellationToken = default)
         {
-            IEnumerable<Author>? authors = await unitOfWork.AuthorRepository.GetAllAsync(paginationParams, cancellationToken);
+            IEnumerable<Author>? authors = await unitOfWork.AuthorRepository
+                .GetAllAsync(request.PaginationParams, cancellationToken);
+
             if (!authors.Any())
             {
                 throw new NotFoundException("Authors not found");

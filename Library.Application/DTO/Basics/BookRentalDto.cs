@@ -1,6 +1,6 @@
-﻿namespace Library.Application.DTO.Requests
+﻿namespace Library.Application.DTO.Basics
 {
-    public class BookRentalRequest
+    public class BookRentalDto
     {
         public required Guid BookId { get; set; }
         public required Guid UserProfileId { get; set; }

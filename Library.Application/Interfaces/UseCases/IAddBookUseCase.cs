@@ -4,6 +4,6 @@ namespace Library.Application.Interfaces.UseCases
 {
     public interface IAddBookUseCase
     {
-        public Task Execute(BookRequest request, CancellationToken cancellationToken = default);
+        public Task Execute(AddBookRequest request, CancellationToken cancellationToken = default);
     }
 }

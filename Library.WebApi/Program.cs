@@ -1,18 +1,20 @@
 using FluentValidation;
-using Library.Application.DTO.Validators;
 using Library.Application.Interfaces.Services;
 using Library.Application.Interfaces.UseCases;
 using Library.Application.Services;
 using Library.Application.UseCases;
+using Library.Application.Validators.DtoValidators;
+using Library.Application.Validators.RequestValidators;
+using Library.Core.Enums;
 using Library.Core.Interfaces;
 using Library.Infrastructure.EntityFramework;
-using Library.Infrastructure.Interfaces;
 using Library.Infrastructure.Repositories;
 using Library.Infrastructure.Services;
 using Library.WebApi.Middlewares;
 using Library.WebApi.SwaggerConfiguration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
 using System.Text;
 
 public class Program
@@ -25,11 +27,17 @@ public class Program
 
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-        builder.Services.AddValidatorsFromAssemblyContaining<AuthorRequestValidator>();
-        builder.Services.AddValidatorsFromAssemblyContaining<BookRentalRequestValidator>();
-        builder.Services.AddValidatorsFromAssemblyContaining<BookRequestValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<AuthorDtoValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<BookDtoValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<BookRentalDtoValidator>();
+
+        builder.Services.AddValidatorsFromAssemblyContaining<AddAuthorRequestValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<AddBookRequestValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<GiveBookRequestValidator>();
         builder.Services.AddValidatorsFromAssemblyContaining<SignInRequestValidator>();
         builder.Services.AddValidatorsFromAssemblyContaining<SignUpRequestValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<UpdateAuthorRequestValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<UpdateBookRequestValidator>();
 
         builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
         {
@@ -43,6 +51,15 @@ public class Program
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
                     .GetBytes(configuration["JwtSecretKey"]))
             };
+        });
+
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("AdminPolicy", policy =>
+                policy.RequireClaim(ClaimTypes.Role, nameof(Role.Admin)));
+
+            options.AddPolicy("UserPolicy", policy =>
+                policy.RequireClaim(ClaimTypes.Role, nameof(Role.User)));
         });
 
         builder.Services.AddEndpointsApiExplorer();
@@ -117,8 +134,8 @@ public class Program
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        //builder.Services.AddEndpointsApiExplorer();
+        //builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
 

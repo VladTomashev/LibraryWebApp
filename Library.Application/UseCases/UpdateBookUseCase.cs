@@ -13,11 +13,11 @@ namespace Library.Application.UseCases
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
-        private readonly IValidator<BookRequest> validator;
+        private readonly IValidator<UpdateBookRequest> validator;
         private readonly IValidationService validationService;
 
         public UpdateBookUseCase(IUnitOfWork unitOfWork, IMapper mapper,
-            IValidator<BookRequest> validator, IValidationService validationService)
+            IValidator<UpdateBookRequest> validator, IValidationService validationService)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
@@ -25,17 +25,18 @@ namespace Library.Application.UseCases
             this.validationService = validationService;
         }
 
-        public async Task Execute(Guid id, BookRequest request, CancellationToken cancellationToken = default)
+        public async Task Execute(UpdateBookRequest request,
+            CancellationToken cancellationToken = default)
         {
             await validationService.ValidateAsync(validator, request, cancellationToken);
 
-            if (await unitOfWork.BookRepository.GetByIdAsync(id, cancellationToken) == null)
+            if (await unitOfWork.BookRepository.GetByIdAsync(request.BookId, cancellationToken) == null)
             {
                 throw new NotFoundException("Book not found");
             }
 
-            Book book = mapper.Map<Book>(request);
-            book.Id = id;
+            Book book = mapper.Map<Book>(request.BookDto);
+            book.Id = request.BookId;
             await unitOfWork.BookRepository.UpdateAsync(book, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }

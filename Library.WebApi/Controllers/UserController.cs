@@ -1,8 +1,6 @@
 ﻿using Library.Application.DTO.Requests;
 using Library.Application.DTO.Responses;
 using Library.Application.Interfaces.UseCases;
-using Library.Core.Entities;
-using Library.Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,27 +48,29 @@ namespace Library.WebApi.Controllers
 
         [HttpPost("refreshtoken")]
         [Authorize]
-        public async Task<IActionResult> RefreshToken([FromBody] TokenRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request,
+            CancellationToken cancellationToken)
         {
             string response = await refreshTokenUseCase.Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet]
-        [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> GetAllUserProfiles([FromQuery] PaginationParams paginationParams,
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> GetAllUserProfiles([FromQuery] GetAllUserProfilesRequest request,
             CancellationToken cancellationToken)
         {
             IEnumerable<UserProfileResponse> response = await getAllUserProfilesUseCase
-                .Execute(paginationParams,cancellationToken);
+                .Execute(request, cancellationToken);
             return Ok(response);
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = nameof(Role.Admin))]
-        public async Task<IActionResult> GetUserProfileById(Guid id, CancellationToken cancellationToken)
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> GetUserProfileById([FromQuery] GetUserProfileByIdRequest request,
+            CancellationToken cancellationToken)
         {
-            UserProfileResponse response = await getUserProfileByIdUseCase.Execute(id, cancellationToken);
+            UserProfileResponse response = await getUserProfileByIdUseCase.Execute(request, cancellationToken);
             return Ok(response);
         }
 
@@ -78,8 +78,12 @@ namespace Library.WebApi.Controllers
         [Authorize]
         public async Task<IActionResult> GetMyUserProfile(CancellationToken cancellationToken)
         {
-            Guid myId = await getIdByJwtUseCase.Execute(HttpContext.User, cancellationToken);
-            UserProfileResponse response = await getUserProfileByIdUseCase.Execute(myId, cancellationToken);
+            Guid myId = await getIdByJwtUseCase
+                .Execute(new GetIdByJwtRequest { Principal = HttpContext.User }, cancellationToken);
+
+            GetUserProfileByIdRequest request = new GetUserProfileByIdRequest { UserId = myId };
+
+            UserProfileResponse response = await getUserProfileByIdUseCase.Execute(request, cancellationToken);
             return Ok(response);
         }
 
